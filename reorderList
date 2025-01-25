@@ -1,0 +1,67 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+//time complexity  O(n)
+// space complexity O(1)
+class Solution {
+    public void reorderList(ListNode head) {
+        /*
+        split the list in half.
+        reverse the second list
+        take one node from first list and one Node from second list to form the required list.
+        List : 1 2 3 4
+        Split 1) 1 2 2) 3 4
+        reverse second list : 4 3
+        combine: 1 4 2 3
+         */
+
+        if(head == null || head.next == null){
+        return;
+        }
+        //split the list in half
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        //reverse second half
+        fast = reverseList(slow.next);
+        slow.next = null; //slow is at 3 and slow.next is first node of second list
+
+        //3.
+        slow = head;
+        while(fast != null){
+            ListNode temp = slow.next;
+            slow.next = fast;
+            fast = fast.next;
+            slow.next.next = temp;
+            slow = temp;
+        }
+
+
+    }
+    private ListNode reverseList(ListNode head){
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode prev = null ;
+        ListNode curr = head ;
+        ListNode fast = curr.next;
+        while(fast != null){
+            curr.next = prev;
+            prev = curr;
+            curr = fast;
+            fast = fast.next;
+        }
+        curr.next = prev;
+        return curr;
+    }
+}
